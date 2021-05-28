@@ -3,6 +3,9 @@ const goods = [
     { title: 'Socks'},
     { title: 'Jacket', price: 350 },
     { title: 'Shoes', price: 250 },
+    { title: 'T-shirt', price: 350 },
+    { title: 'Pants', price: 250 },
+    
   ]
 
 /**

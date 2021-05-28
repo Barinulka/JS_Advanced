@@ -18,6 +18,8 @@ header {
     flex-direction: row;
     height: 60px;
     margin-bottom: 15px;
+    background: #fff;
+    padding: 0 15px;
 }
 
 .cart-button {
@@ -40,7 +42,9 @@ header {
 .goods-list {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     flex-wrap: wrap;
+    padding: 0 15px;
 }
 
 .goods-item {
