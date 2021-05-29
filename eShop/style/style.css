@@ -1,0 +1,134 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Lato', 'Arial', 'Helvetica', sans-serif;
+  background: #f0f0f0;
+  min-width: 315px;
+  height: auto;
+}
+
+.center {
+  padding: 0 calc(50% - 1140px / 2);
+}
+
+.hidden {
+  display: none !important;
+}
+
+header {
+  margin: 0;
+  height: 60px;
+  margin-bottom: 15px;
+  background: #fff;
+}
+
+.logo {
+  display: inline-block;
+  line-height: 60px;
+  padding: 0 25px;
+}
+
+.logo-title {
+  margin: 0;
+  text-decoration: none;
+  color: #000;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.logo-title:hover {
+  opacity: 0.5;
+}
+
+.total {
+  display: inline-block;
+}
+
+.cart {
+  display: inline;
+  line-height: 60px;
+  float: right;
+  padding: 0 25px;
+}
+
+.cart-button {
+  padding: 5px 25px;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background: #999;
+  color: #fff;
+}
+
+.cart-button:hover {
+  opacity: 0.8;
+}
+
+.cart-button:active {
+  opacity: 0.5;
+}
+
+main {
+  margin: 20px 0 20px 0;
+}
+
+.goods {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(190px, 1fr))[auto-fit];
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  justify-items: center;
+  grid-gap: 20px;
+  padding: 0 15px;
+}
+
+.goods-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  background: white;
+  border: 1px solid wheat;
+  border-radius: 10px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 0px 20px;
+}
+
+.goods-item__image {
+  margin-top: 20px;
+}
+
+.goods-item:hover {
+  -webkit-box-shadow: 0px 0px 15px 11px rgba(83, 165, 227, 0.14);
+          box-shadow: 0px 0px 15px 11px rgba(83, 165, 227, 0.14);
+}
+
+@media only screen and (max-width: 992px) and (min-width: 768px) {
+  .center {
+    padding: 0 calc(50% - 768px / 2);
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .center {
+    padding: 0 calc(50% - 543px / 2);
+  }
+}
+/*# sourceMappingURL=style.css.map */
