@@ -4,11 +4,11 @@ class GoodsItem {
         this.image = image;
         this.price = price;
     }
-    render(title, image, price) {
+    render() {
         return `<div class="goods-item">
-            <img class="goods-item__image" src="${image}" alt="Some img">
-            <h3 class="goods-item__title">${title}</h3>
-            <p class="goods-item__price">${price}</p>
+            <img class="goods-item__image" src="${this.image}" alt="Some img">
+            <h3 class="goods-item__title">${this.title}</h3>
+            <p class="goods-item__price">${this.price}</p>
         </div>`;
     }
 }
@@ -37,12 +37,12 @@ class GoodsList {
     }
 
     render() {
-        const goodItem = new GoodsItem();
-
+        let listHtml = "";
         this.goods.forEach((good) => {
-            document.querySelector('.goods').insertAdjacentHTML('beforeend', goodItem.render(good.title, good.image, good.price));
+            const goodItem = new GoodsItem(good.title, good.image, good.price);
+            listHtml += goodItem.render();
         });
-            
+        document.querySelector('.goods').insertAdjacentHTML('beforeend', listHtml);
     }
 }
 
