@@ -1,14 +1,18 @@
+const API_URL = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses";
+
 class GoodsItem {
-    constructor(title, image, price) {
+    constructor(title, price, id, image = 'https://via.placeholder.com/150') {
         this.title = title;
-        this.image = image;
         this.price = price;
+        this.id = id;
+        this.image = image;
     }
     render() {
         return `<div class="goods-item">
             <img class="goods-item__image" src="${this.image}" alt="Some img">
             <h3 class="goods-item__title">${this.title}</h3>
             <p class="goods-item__price">${this.price}</p>
+            <button class="goods-item__add-cart" data-id="${this.id}">В корзину</button>
         </div>`;
     }
 }
@@ -18,14 +22,15 @@ class GoodsList {
         this.goods  = [];
     }
 
-    fetchGoods() {
-        this.goods = [
-            { title: 'Shirt',   image: 'https://via.placeholder.com/150',  price: 250 },
-            { title: 'Socks',   image: 'https://via.placeholder.com/150',  price: 150},
-            { title: 'Jacket',  image: 'https://via.placeholder.com/150',  price: 350 },
-            { title: 'Shoes',   image: 'https://via.placeholder.com/150',  price: 250 },
-        ];
-    }
+    async fetchGoods() {
+        const responce = await fetch(`${API_URL}/catalogData.json`);
+        if (responce.ok) {
+          const catalogItems = await responce.json();
+          this.goods = catalogItems;
+        } else {
+          alert("Ошибка при соединении с сервером");
+        }
+      }
 
     totalPrice () {
         let total = 0;
@@ -39,42 +44,60 @@ class GoodsList {
     render() {
         let listHtml = "";
         this.goods.forEach((good) => {
-            const goodItem = new GoodsItem(good.title, good.image, good.price);
+            const goodItem = new GoodsItem(good.product_name, good.price, good.id_product);
             listHtml += goodItem.render();
         });
         document.querySelector('.goods').insertAdjacentHTML('beforeend', listHtml);
     }
 }
 
-class Cart {
-    constructor() {
-        this.products = [];
-    }
-
-    removeCart () {
-
-    }
-    
-    render () {
-
-    }
-}
-
 class CartItem {
-    constructor(title, price) {
+    constructor(title, price, quantity = 1) {
         this.title = title;
         this.price = price;
-        this.quantity = 1;
+        this.quantity = quantity;
+        this.orderArray = [];
     }
 
-    selectQuantity () {
-
+    render() {
+        return `<div class="cart-item">
+            <h3 class="cart-item__title">${this.title}</h3>
+            <p class="cart-item__price">${this.price}</p>
+            <p class="cart-item__quant">${this.quantity}</p>
+        </div>`;
     }
 }
 
-const init = () => {
+class CartList {
+    constructor() {
+        this.orderArray = [];
+        this.products = '';
+    }
+
+    async fetchGoods() {
+        const responce = await fetch(`${API_URL}/catalogData.json`);
+        if (responce.ok) {
+          const catalogItems = await responce.json();
+          this.products = catalogItems;
+        } else {
+          alert("Ошибка при соединении с сервером");
+        }
+      }
+
+    render(dataId) {
+        let listHtml = "";
+        let prod = this.products.find(item => item.id_product == dataId);
+        this.orderArray.push(prod);
+        const cartItem = new CartItem(prod.product_name, prod.price, prod.id_product);
+        listHtml += cartItem.render();
+        document.querySelector('.cart-section__items').insertAdjacentHTML('beforeend', listHtml);
+       
+    }
+}
+
+const init = async () => {
     const list = new GoodsList();
-    list.fetchGoods();
+    await list.fetchGoods();
     list.render();
 
     const total = document.querySelector('.total');
@@ -84,6 +107,19 @@ const init = () => {
         e.preventDefault();
         total.classList.toggle('hidden');
     });
+
+    const cartList = new CartList();
+    await cartList.fetchGoods()
+
+    let cartButtons = document.querySelectorAll('.goods-item__add-cart');
+    cartButtons.forEach((add) => {
+        add.addEventListener('click', (e) => {
+           const dataId = e.target.getAttribute('data-id');
+           cartList.render(dataId);
+        });
+    }); 
+
+
     
 }
 

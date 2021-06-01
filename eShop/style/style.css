@@ -108,11 +108,7 @@ main {
   border-radius: 10px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  padding: 0px 20px;
-}
-
-.goods-item__image {
-  margin-top: 20px;
+  padding: 20px;
 }
 
 .goods-item:hover {
