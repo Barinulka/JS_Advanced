@@ -49,10 +49,23 @@ class GoodsList {
         });
         document.querySelector('.goods').insertAdjacentHTML('beforeend', listHtml);
     }
+
+    addToCart() {
+        const cartList = new CartList();
+        cartList.fetchGoods()
+    
+        let cartButtons = document.querySelectorAll('.goods-item__add-cart');
+        cartButtons.forEach((add) => {
+            add.addEventListener('click', (e) => {
+               const dataId = e.target.getAttribute('data-id');
+               cartList.render(dataId);
+            });
+        }); 
+    }
 }
 
 class CartItem {
-    constructor(title, price, quantity = 1) {
+    constructor(title, price, quantity) {
         this.title = title;
         this.price = price;
         this.quantity = quantity;
@@ -62,43 +75,45 @@ class CartItem {
     render() {
         return `<div class="cart-item">
             <h3 class="cart-item__title">${this.title}</h3>
-            <p class="cart-item__price">${this.price}</p>
-            <p class="cart-item__quant">${this.quantity}</p>
+            <p class="cart-item__price">${this.price} ед.</p>
+            <p class="cart-item__quant">${this.quantity} шт.</p>
         </div>`;
     }
 }
 
 class CartList {
-    constructor() {
+    constructor(quantity = 1) {
         this.orderArray = [];
         this.products = '';
+        this.quantity = quantity
     }
 
     async fetchGoods() {
-        const responce = await fetch(`${API_URL}/catalogData.json`);
-        if (responce.ok) {
-          const catalogItems = await responce.json();
-          this.products = catalogItems;
-        } else {
-          alert("Ошибка при соединении с сервером");
-        }
-      }
+        const goods = new GoodsList();
+        await goods.fetchGoods()
+        
+        this.products = goods.goods;
+    }
 
-    render(dataId) {
+    async render(dataId) {
         let listHtml = "";
         let prod = this.products.find(item => item.id_product == dataId);
         this.orderArray.push(prod);
-        const cartItem = new CartItem(prod.product_name, prod.price, prod.id_product);
+        
+        const cartItem = new CartItem(prod.product_name, prod.price, this.quantity);
         listHtml += cartItem.render();
+        
         document.querySelector('.cart-section__items').insertAdjacentHTML('beforeend', listHtml);
-       
     }
+
+
 }
 
 const init = async () => {
     const list = new GoodsList();
     await list.fetchGoods();
     list.render();
+    list.addToCart();
 
     const total = document.querySelector('.total');
     total.innerHTML = `Сумма всех товаров - ${list.totalPrice()} ед.`;
@@ -108,19 +123,13 @@ const init = async () => {
         total.classList.toggle('hidden');
     });
 
-    const cartList = new CartList();
-    await cartList.fetchGoods()
-
-    let cartButtons = document.querySelectorAll('.goods-item__add-cart');
-    cartButtons.forEach((add) => {
-        add.addEventListener('click', (e) => {
-           const dataId = e.target.getAttribute('data-id');
-           cartList.render(dataId);
-        });
-    }); 
-
-
-    
+    let cartBtn = document.querySelector('.cart-button');
+    cartBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelector('.cart-section__items').classList.toggle('hidden');
+    });
 }
+
+
 
 window.onload = init;
