@@ -27,6 +27,17 @@ header {
     background: #fff;
 }
 
+.rotate {
+    display: block;
+    position: absolute;
+    transform: rotate(45deg);
+    width: 15px;
+    height: 15px;
+    top: -7px;
+    left: 170px;
+    background: #fff;
+}
+
 .logo {
     display: inline-block;
     line-height: 60px;
@@ -71,6 +82,7 @@ header {
         display: flex;
         flex-direction: column;
         position: absolute;
+        top: 75px;
         right: 115px;
         width: 350px;
         background: #fff;
@@ -85,6 +97,9 @@ header {
         align-items: center;
         height: 30px;
         line-height: 30px;
+        &__delete {
+            cursor: pointer;
+        }
     }
 }
 
