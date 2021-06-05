@@ -127,6 +127,22 @@ class BusketLists {
             });
         });
     }
+
+    deleteProducts(itemId) {
+        const as = new BusketItems()
+        if(this.cartItems.find((id) => id.id == itemId )){
+            for (let i = 0; i < this.cartItems.length; i++) {
+                if (this.cartItems[i].id == itemId) {
+                    if (this.cartItems[i].count > 1) {
+                        this.cartItems[i].count -= 1;
+                        as.render();
+                    } else {
+                        this.cartItems.splice(i);
+                    }
+                }
+            }
+        } 
+    }
 }
 
 const init = async () => {
@@ -151,11 +167,6 @@ const init = async () => {
     const cartList = new BusketLists();
     cartList.fillArray(list.goods);
     
-    
-    
-
-    
 }
-
 
 window.onload = init;
