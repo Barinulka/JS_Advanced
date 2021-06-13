@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eShop</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <div id="app">
+        <header class="center">
+            <div class="logo">
+                <a href="#" class="logo-title">e-Shop</a>
+            </div>
+            <input type="text" class="goods-search" v-model="searchLine">
+            <button class="search-button" type="button" v-on:click="filterGoods(searchLine)">Искать</button>
+            <div class="cart ">
+                <button class="cart-button" type="button" v-on:click="showCart">Корзина</button>
+                <div class="cart-section__items center" v-if="isVisibleCart">
+                    <div class="rotate"></div>
+                    <h3 class="cart-empty" style="height: 20px;line-height: 20px;padding: 0;margin: 0;" v-if="cartItems.length == 0">Корзина пуста</h3>
+                    <div class="cart-item" v-for="cartItem in cartItems">
+                        <h3 class="cart-item__title">{{cartItem.title}}</h3>
+                        <p class="cart-item__price">{{cartItem.price}} руб.</p>
+                        <p class="cart-item__count">{{cartItem.count}} шт.</p>
+                        <div class="cart-item__delete" 
+                            v-bind:item-id="cartItem.id"
+                            v-on:click="deleteItem"
+                        >x</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="center">
+            <div class="goods">
+                <div class="goods-item" v-for="good in filteredGoods">
+                    <img class="goods-item__image" alt="Some img" v-bind:src="image">
+                    <h3 class="goods-item__title">{{good.product_name}}</h3>
+                    <p class="goods-item__price">{{good.price}}</p>
+                    <button class="goods-item__add-cart" 
+                        v-bind:data-id="good.id_product"
+                        v-on:click="addToCart"
+                    >В корзину</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="script.js" ></script>
+
+</html>
