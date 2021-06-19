@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>form</title>
+    <style>
+        input, textarea {
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+        input:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <form action="#">
+        <input type="text" name="name" id="name" class="name field" placeholder="Ваше имя"><br>
+        <input type="tel" name="phone" id="phone" class="phone field" placeholder="Ваш телефон"><br>
+        <input type="email" name="email" id="email" class="email field" placeholder="Ваш email"><br>
+        <textarea name="text" id="text" cols="30" rows="10" placeholder="Сообщение" class="field"></textarea><br>
+        <input type="submit" value="Отправить" class="btn">
+    </form>
+
+    <script>
+        'use strict';
+
+        const form = document.querySelector('form');
+        const btn = form.querySelector('.btn');
+        const name = form.querySelector('.name');
+        const phone = form.querySelector('.phone');
+        const email = form.querySelector('.email');
+        const text = form.querySelector('textarea');
+
+        const field = form.querySelectorAll('.field');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            removeErrorMessage();
+            checkEmptyField();
+
+            // if(name.value) {
+            //     checkName(name);
+            // }
+            // if(phone.value) {
+            //     checkPhone(phone);
+            // }
+            // if(email.value) {
+            //     checkEmail(email);
+            // }
+        });
+
+        function removeErrorMessage() {
+            const errors = form.querySelectorAll('.error');
+
+            for(let err of errors) {
+                err.remove();
+            }
+        }
+
+        function generateErrorMessage(text) {
+            let error = document.createElement('div');
+            error.className='error';
+            error.style.color = 'red';
+            error.style.fontSize = '12px';
+            error.innerHTML = text;
+
+            return error;
+        }
+
+        function checkEmptyField() {
+            field.forEach((elem) => {
+                if (!elem.value) {
+                    // console.log(`Не заполнено - ${elem.name}`);
+                    let error = generateErrorMessage('Обязательно для заполнения');
+                    elem.parentElement.insertBefore(error, elem);
+                } else {
+                    checkField(elem);
+                }
+            });
+        }
+
+        function checkField(elem) {
+            const regExpName = /^[a-zA-Zа-яА-я]+$/gi;
+            const regExpPhone = /^((8|\+7))?(\(?\d{3}\)?)?(\(?\d{3}\)?[\-]?)[\d]{4}$/g;
+            const regExpEmail = /^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/g;
+            if(elem.name == 'name') {
+                let check = regExpName.test(elem.value);
+                console.log(`${elem.name} - ${check}`);
+                if(check == false) {
+                    generateErr(elem, 'Имя содержит только буквы');
+                }
+            } else if(elem.name == 'phone') {
+                let check = regExpPhone.test(elem.value);
+                console.log(`${elem.name} - ${check}`);
+                if(check == false) {
+                    generateErr(elem, 'Номер вида +7(000)000-0000');
+                }
+            } else if(elem.name == 'email') {
+                let check = regExpEmail.test(elem.value);
+                console.log(`${elem.name} - ${check}`);
+                if(check == false) {
+                    generateErr(elem, 'E-mail имеет вид mymail@mail.ru, или my.mail@mail.ru, или my-mail@mail.ru.');
+                }
+            }
+        }
+
+        function generateErr(elem, text) {
+            let error = generateErrorMessage(text);
+            elem.parentElement.insertBefore(error, elem);
+        }
+
+    </script>
+</body>
+</html>
