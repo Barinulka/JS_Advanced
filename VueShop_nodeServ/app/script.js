@@ -5,7 +5,7 @@ Vue.component('goods-list', {
     props: ['goods'],
     template: `
         <div class="goods">
-            <goods-item v-for="good in goods" v-bind:good="good"></goods-item>
+            <goods-item v-for="good in goods" v-bind:good="good" v-bind:key="good.id_product"></goods-item>
         </div> 
     `,
 });
@@ -27,7 +27,9 @@ Vue.component('goods-item', {
               },
               body: JSON.stringify(this.good) 
             });
-          },
+            
+            // this.$root.getCartItems();  // Так корзина прогружается моментально даже при открытом poup-е корзины
+        },
     },
     template: `
         <div class="goods-item">
@@ -69,6 +71,7 @@ Vue.component('cart-list', {
     data(){
         return {
             isVisibleCart: false,
+            componentKey: 0,
         }
     },
     methods: {
@@ -78,15 +81,24 @@ Vue.component('cart-list', {
             } else {
                 this.isVisibleCart = false;
             }
+            this.$emit('get'); // так корзина прогужается при каждом нажатии на кнопку корзины
         },
-        // deleteItem: function(event) {
-        //     this.$root.deleteItem(event);
-        // }
+        async deleteItem(cartItem) {
+            const response = await fetch(`${API}/deleteItem`, {
+                method: 'POST', 
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(cartItem) 
+            });
+            this.$emit('get'); 
+        },
     },
     template: `
         <div class="cart">
         <button class="cart-button" type="button" v-on:click="showCart">Корзина</button>
-            <div class="cart-section__items center" v-if="isVisibleCart">
+            <div class="cart-section__items center" v-if="isVisibleCart" >
                 <div class="rotate"></div>
                 <h3 class="cart-empty" style="height: 20px;line-height: 20px;padding: 0;margin: 0;" v-if="cart.length == 0">Корзина пуста</h3>
                 <div class="cart-item" v-for="cartItem in cart" v-bind:key=cartItem.id_product>
@@ -95,7 +107,7 @@ Vue.component('cart-list', {
                     <p class="cart-item__count">{{cartItem.count}} шт.</p>
                     <div class="cart-item__delete" 
                         v-bind:item-id="cartItem.id_product"
-                        
+                        v-on:click="deleteItem(cartItem)"
                     >x</div>
                 </div>
             </div>
@@ -145,23 +157,22 @@ const app = new Vue({
             }
         },
 
-        deleteItem: function(event) {
-            const itemId = event.target.getAttribute('item-id');
-            for (let i = 0; i < this.cartItems.length; i++) {
-                if (this.cartItems[i].id == itemId) {
-                    if (this.cartItems[i].count > 1) {
-                        this.cartItems[i].count -= 1;
-                    } else {
-                        this.cartItems.splice(i, 1);
-                    }
-                } 
-            }
-        },
+        // deleteItem: function(event) {
+        //     const itemId = event.target.getAttribute('item-id');
+        //     for (let i = 0; i < this.cartItems.length; i++) {
+        //         if (this.cartItems[i].id == itemId) {
+        //             if (this.cartItems[i].count > 1) {
+        //                 this.cartItems[i].count -= 1;
+        //             } else {
+        //                 this.cartItems.splice(i, 1);
+        //             }
+        //         } 
+        //     }
+        // },
     },
   
     async mounted() {
         await this.getProducts();
-        await this.getCartItems();
     },
 
     computed: {

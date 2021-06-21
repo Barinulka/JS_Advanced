@@ -35,7 +35,7 @@ app.post("/addToCart", (req, res) => {
       } else {
         const cart = JSON.parse(data);
         const item = req.body;
-
+        
         if (cart.find(elem => elem.id_product == item.id_product )){
             for (let i = 0; i < cart.length; i++) {
                 if (cart[i].id_product == item.id_product) {
@@ -58,4 +58,38 @@ app.post("/addToCart", (req, res) => {
         });
       }
     });
+});
+
+// Удаляем товар из корзины
+app.post("/deleteItem", (req, res) => {
+  fs.readFile("data/cart.json", "utf-8", (err, data) => {
+    if (err) {
+      res.send('{"result": 0}');
+    } else {
+      const cart = JSON.parse(data);
+      const item = req.body;
+
+      if (cart.find(elem => elem.id_product == item.id_product )){
+        for (let i = 0; i < cart.length; i++) {
+          if (cart[i].id_product == item.id_product) {
+            if (cart[i].count > 1) {
+              cart[i].count -= 1;
+              console.log(`update count item(${cart[i].product_name}), count: ${cart[i].count}`);
+            } else {
+              cart.splice(i, 1);
+              console.log(`remove one item - ${item.product_name}`);
+            }
+          } 
+        }
+      } 
+      
+      fs.writeFile("data/cart.json", JSON.stringify(cart), (err) => {
+        if (err) {
+          res.send('{"result": 0}');
+        } else {
+          res.send('{"result": 1}');
+        }
+      });
+    }
+  });
 });

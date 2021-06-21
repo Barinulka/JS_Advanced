@@ -11,7 +11,7 @@
     <div id="app">
         <header class="center">
             <search></search>
-            <cart-list :cart="cartItems"></cart-list>
+            <cart-list :cart="cartItems" v-on:get="getCartItems"></cart-list>
         </header>
         <main class="center">
             <goods-list :goods="filteredGoods" ></goods-list>
